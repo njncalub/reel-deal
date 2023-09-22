@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "bierner.markdown-mermaid",
+    "denoland.vscode-deno",
+    "esbenp.prettier-vscode",
+    "surrealdb.surrealql"
+  ]
+}
