@@ -1,5 +1,7 @@
 # reel-deal
 
+![Real Deal Logo](./static/ogp.png)
+
 [![Deno Version](https://img.shields.io/badge/deno-v1.37.0-black)](https://deno.land/)
 [![License](https://img.shields.io/badge/license-MIT-blue)](./LICENSE.md)
 
