@@ -644,3 +644,6 @@ FodyWeavers.xsd
 # Additional files built by Visual Studio
 
 # End of https://www.toptal.com/developers/gitignore/api/node,windows,linux,macos,vim,visualstudio,git
+
+# Fresh build directory
+_fresh/

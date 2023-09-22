@@ -5,6 +5,10 @@
 
 Allows users to browse available movies, rent movies, and view their rental history.
 
+## Development
+
+Please see bundled [DEVELOPMENT file](./DEVELOPMENT.md) for more details.
+
 ## Contributing
 
 > **Attribution**: This text is originally from [adriennefriend/imposter-syndrome-disclaimer](https://github.com/adriennefriend/imposter-syndrome-disclaimer).

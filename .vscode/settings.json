@@ -10,6 +10,18 @@
     "**/nodes/**/*.inn": "yaml"
   },
   "window.title": "${activeEditorMedium}${separator}${rootName}",
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  },
   "[yaml]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },

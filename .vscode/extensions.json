@@ -3,6 +3,7 @@
     "bierner.markdown-mermaid",
     "denoland.vscode-deno",
     "esbenp.prettier-vscode",
+    "sastan.twind-intellisense",
     "surrealdb.surrealql"
   ]
 }
