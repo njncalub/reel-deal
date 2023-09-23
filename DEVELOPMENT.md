@@ -9,6 +9,7 @@ We recommend using [Visual Studio Code](https://code.visualstudio.com/), with th
 - [`bierner.markdown-mermaid`](https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid)
 - [`denoland.vscode-deno`](https://marketplace.visualstudio.com/items?itemName=denoland.vscode-deno)
 - [`esbenp.prettier-vscode`](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+- [`rangav.vscode-thunder-client`](https://marketplace.visualstudio.com/items?itemName=rangav.vscode-thunder-client)
 - [`sastan.twind-intellisense`](https://marketplace.visualstudio.com/items?itemName=sastan.twind-intellisense)
 - [`surrealdb.surrealql`](https://marketplace.visualstudio.com/items?itemName=surrealdb.surrealql)
 
