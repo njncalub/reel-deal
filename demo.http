@@ -1,0 +1,126 @@
+// Install the following VS Code extension to use:
+// https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+
+# ? ----------------------------------------------------------------------------
+# ? Modify the following variables before running your requests:
+# ? ----------------------------------------------------------------------------
+# Defaults:
+# @baseUrl = https://reel-deal.napjose.ph
+# @contentType = application/json
+# @userName = John Doe
+# @userEmail = john.doe@example.com
+# @userPassword = My-Password-123
+
+@baseUrl = https://reel-deal.napjose.ph
+@contentType = application/json
+@userName = John Doe
+@userEmail = john.doe@example.com
+@userPassword = My-Password-123
+
+################################################################################
+# @name createUser
+# TITLE: Register
+# DESCRIPTION: Creates a new User using the provided credentials.
+# EXAMPLE RESPONSE:
+# {
+#   "id": "01HB306BDTMDFERZ04Q6S94B9N",
+#   "name": "John Doe"
+# }
+POST {{baseUrl}}/api/users
+Content-Type: {{contentType}}
+
+{
+  "name": "{{userName}}",
+  "email": "{{userEmail}}",
+  "password": "{{userPassword}}"
+}
+
+################################################################################
+# @name loginUser
+# TITLE: Login
+# DESCRIPTION: Logs in using the provided credentials and returns the access and refresh tokens.
+# EXAMPLE RESPONSE:
+# {
+#   "user": {
+#     "id": "01HB306BDTMDFERZ04Q6S94B9N",
+#     "name": "John Doe"
+#   },
+#   "tokens": {
+#     "access": {
+#       "type": "access_token",
+#       "token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJyZWVsLWRlYWwiLCJpYXQiOjE2OTU1Mzk0NzY5NTgsInN1YiI6IjAxSEIzMDZCRFRNREZFUlowNFE2Uzk0QjlOIiwiZXhwIjoxNjk1NTQzMDc2OTU4fQ.URgyU23XWru2UQMQzXqAiffpW55SBPjwctlF9p82PFdzThL5RYq1C8-ykIQCxexoZqORNF1zBdVKlX2LTNpYtw",
+#       "expires": "2023-09-24T08:11:16.958Z"
+#     },
+#     "refresh": {
+#       "type": "refresh_token",
+#       "token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJyZWVsLWRlYWwiLCJpYXQiOjE2OTU1Mzk0NzY5NjAsInN1YiI6IjAxSEIzMDZCRFRNREZFUlowNFE2Uzk0QjlOIiwiZXhwIjoxNjk1NTQxMjc2OTU4fQ.HEPm4QSXdzEBsaOyPVyECoC-Vs9CSQEMqA4Xc2wNUNtezIe9XDI7G_APwpbUKpkB2lwN-Al80oQkcLT0OKtYgg",
+#       "expires": "2023-09-24T07:41:16.958Z"
+#     }
+#   }
+# }
+POST {{baseUrl}}/api/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "{{userEmail}}",
+  "password": "{{userPassword}}"
+}
+
+################################################################################
+# @name getUsers
+# TITLE: List Users
+# DESCRIPTION: Lists all the available public information of Users.
+# EXAMPLE RESPONSE:
+# {
+#   "results": [
+#     {
+#       "id": "01HB0ZQET8Q8CG8131VW7JP2AY",
+#       "name": "Rob Banks"
+#     },
+#     {
+#       "id": "01HB306BDTMDFERZ04Q6S94B9N",
+#       "name": "John Doe"
+#     }
+#   ],
+#   "count": 2,
+#   "limit": 25,
+#   "reverse": false,
+#   "cursor": ""
+# }
+GET {{baseUrl}}/api/users
+Content-Type: {{contentType}}
+
+################################################################################
+# @name getUsersWithQueryParams
+# TITLE: List Users Parameterized
+# DESCRIPTION: Lists all the available public information of Users, with query parameters.
+# EXAMPLE RESPONSE:
+# {
+#   "results": [
+#     {
+#       "id": "01HB0ZQET8Q8CG8131VW7JP2AY",
+#       "name": "Rob Banks"
+#     }
+#   ],
+#   "count": 2,
+#   "limit": 1,
+#   "reverse": true,
+#   "cursor": "AjAxSEIwWlFFVDhROENHODEzMVZXN0pQMkFZAA=="
+# }
+GET {{baseUrl}}/api/users
+  ?cursor=AjAxSEIzMDZCRFRNREZFUlowNFE2Uzk0QjlOAA==
+  &limit=1
+  &reverse=true
+Content-Type: {{contentType}}
+
+################################################################################
+# @name getUser
+# TITLE: Get User
+# DESCRIPTION: Gets the available public information of a specific User.
+# EXAMPLE RESPONSE:
+# {
+#   "id": "01HB306BDTMDFERZ04Q6S94B9N",
+#   "name": "John Doe"
+# }
+GET {{baseUrl}}/api/users/{{loginUser.response.body.$.user.id}}
+Content-Type: {{contentType}}

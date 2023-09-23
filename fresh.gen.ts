@@ -5,32 +5,34 @@
 import * as $0 from "./routes/_404.tsx";
 import * as $1 from "./routes/_app.tsx";
 import * as $2 from "./routes/api/auth/login.ts";
-import * as $3 from "./routes/api/movies/[movieId]/copies/[copyId].ts";
-import * as $4 from "./routes/api/movies/[movieId]/copies/index.ts";
-import * as $5 from "./routes/api/movies/[movieId]/index.ts";
-import * as $6 from "./routes/api/movies/index.ts";
-import * as $7 from "./routes/api/rentals/[rentalId].ts";
-import * as $8 from "./routes/api/rentals/index.ts";
-import * as $9 from "./routes/api/users/[userId]/index.ts";
-import * as $10 from "./routes/api/users/[userId]/rentals.ts";
-import * as $11 from "./routes/api/users/index.ts";
-import * as $12 from "./routes/index.tsx";
+import * as $3 from "./routes/api/auth/refresh-tokens.ts";
+import * as $4 from "./routes/api/movies/[movieId]/copies/[copyId].ts";
+import * as $5 from "./routes/api/movies/[movieId]/copies/index.ts";
+import * as $6 from "./routes/api/movies/[movieId]/index.ts";
+import * as $7 from "./routes/api/movies/index.ts";
+import * as $8 from "./routes/api/rentals/[rentalId].ts";
+import * as $9 from "./routes/api/rentals/index.ts";
+import * as $10 from "./routes/api/users/[userId]/index.ts";
+import * as $11 from "./routes/api/users/[userId]/rentals.ts";
+import * as $12 from "./routes/api/users/index.ts";
+import * as $13 from "./routes/index.tsx";
 
 const manifest = {
   routes: {
     "./routes/_404.tsx": $0,
     "./routes/_app.tsx": $1,
     "./routes/api/auth/login.ts": $2,
-    "./routes/api/movies/[movieId]/copies/[copyId].ts": $3,
-    "./routes/api/movies/[movieId]/copies/index.ts": $4,
-    "./routes/api/movies/[movieId]/index.ts": $5,
-    "./routes/api/movies/index.ts": $6,
-    "./routes/api/rentals/[rentalId].ts": $7,
-    "./routes/api/rentals/index.ts": $8,
-    "./routes/api/users/[userId]/index.ts": $9,
-    "./routes/api/users/[userId]/rentals.ts": $10,
-    "./routes/api/users/index.ts": $11,
-    "./routes/index.tsx": $12,
+    "./routes/api/auth/refresh-tokens.ts": $3,
+    "./routes/api/movies/[movieId]/copies/[copyId].ts": $4,
+    "./routes/api/movies/[movieId]/copies/index.ts": $5,
+    "./routes/api/movies/[movieId]/index.ts": $6,
+    "./routes/api/movies/index.ts": $7,
+    "./routes/api/rentals/[rentalId].ts": $8,
+    "./routes/api/rentals/index.ts": $9,
+    "./routes/api/users/[userId]/index.ts": $10,
+    "./routes/api/users/[userId]/rentals.ts": $11,
+    "./routes/api/users/index.ts": $12,
+    "./routes/index.tsx": $13,
   },
   islands: {},
   baseUrl: import.meta.url,

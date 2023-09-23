@@ -3,8 +3,7 @@
     "bierner.markdown-mermaid",
     "denoland.vscode-deno",
     "esbenp.prettier-vscode",
-    "rangav.vscode-thunder-client",
-    "sastan.twind-intellisense",
-    "surrealdb.surrealql"
+    "humao.rest-client",
+    "sastan.twind-intellisense"
   ]
 }
