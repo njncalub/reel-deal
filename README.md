@@ -17,20 +17,20 @@ This project uses [Deno KV](https://deno.com/kv), a new key-value store for [Den
 
 > **NOTE**: Due to design limitations of the datastore, we need to maintain separate keys if we want to create [indexes](https://docs.deno.com/kv/manual/secondary_indexes) or count the number of records. For example, the key `["users_by_email"]` indexes the users by their emails and the key `["users_count"]` holds the number of users.
 
-| Feature | Key                                        | Value       | Description                                      |
-| ------- | ------------------------------------------ | ----------- | ------------------------------------------------ |
-| Auth    | `["tokens", t.token]`                      | `TokenRow`  | Stores tokens for authentication.                |
-| Users   | `["users", u.id]`                          | `UserRow`   | Stores user information.                         |
-| Users   | `["users_by_email", u.email]`              | `UserRow`   | Stores user information, indexed by email.       |
-| Users   | `["users_count"]`                          | `bigint`    | Stores the number of users.                      |
-| Movies  | `["movies", m.id]`                         | `MovieRow`  | Stores movie information.                        |
-| Movies  | `["movies_count"]`                         | `bigint`    | Stores the number of movies.                     |
-| Rentals | `["rentals", r.id]`                        | `RentalRow` | Stores rental information.                       |
-| Rentals | `["rentals_count"]`                        | `bigint`    | Stores the number of rentals.                    |
-| Rentals | `["users", u.id, "current_rentals", r.id]` | `RentalRow` | Stores the rentals for a user.                   |
-| Rentals | `["users", u.id, "current_rentals_count"]` | `bigint`    | Stores the number of rentals for a user.         |
-| Rentals | `["users", u.id, "removed_rentals", r.id]` | `RentalRow` | Stores the removed rentals for a user.           |
-| Rentals | `["users", u.id, "removed_rentals_count"]` | `bigint`    | Stores the number of removed rentals for a user. |
+| Feature | Key                               | Value       | Description                                      |
+| ------- | --------------------------------- | ----------- | ------------------------------------------------ |
+| Auth    | `["tokens", t.token]`             | `TokenRow`  | Stores tokens for authentication.                |
+| Users   | `["users", u.id]`                 | `UserRow`   | Stores user information.                         |
+| Users   | `["users_by_email", u.email]`     | `UserRow`   | Stores user information, indexed by email.       |
+| Users   | `["users_count"]`                 | `bigint`    | Stores the number of users.                      |
+| Movies  | `["movies", m.id]`                | `MovieRow`  | Stores movie information.                        |
+| Movies  | `["movies_count"]`                | `bigint`    | Stores the number of movies.                     |
+| Rentals | `["rentals", r.id]`               | `RentalRow` | Stores rental information.                       |
+| Rentals | `["rentals_count"]`               | `bigint`    | Stores the number of rentals.                    |
+| Rentals | `["current_rentals", u.id, r.id]` | `RentalRow` | Stores the rentals for a user.                   |
+| Rentals | `["current_rentals_count", u.id]` | `bigint`    | Stores the number of rentals for a user.         |
+| Rentals | `["removed_rentals", u.id, r.id]` | `RentalRow` | Stores the removed rentals for a user.           |
+| Rentals | `["removed_rentals_count", u.id]` | `bigint`    | Stores the number of removed rentals for a user. |
 
 ```typescript
 export const TokenRowSchema = z.object({
@@ -63,8 +63,8 @@ export const MovieRowSchema = z.object({
 export const RentalRowSchema = z.object({
   // Primary Key on:
   // - ["rentals", r.id]
-  // - ["users", u.id, "current_rentals", r.id]
-  // - ["users", u.id, "removed_rentals", r.id]
+  // - ["current_rentals", u.id, r.id]
+  // - ["removed_rentals", u.id, r.id]
   id: z.string().ulid(),
   userId: z.string().ulid(),
   movieId: z.string().ulid(),

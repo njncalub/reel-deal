@@ -20,7 +20,7 @@ export async function countAllRentals() {
 }
 
 export async function countAllRentalsByUserId(userId: string) {
-  const res = await kv.get<Deno.KvU64>(["users", userId, "rentals_count"]);
+  const res = await kv.get<Deno.KvU64>(["current_rentals_count", userId]);
   const count = res.value?.value ?? 0n;
   return Number(count);
 }
@@ -44,7 +44,7 @@ export function listUserRentalsByUserId(
   options?: Deno.KvListOptions,
 ) {
   return kv.list<RentalRow>(
-    { prefix: ["users", userId, "current_rentals"] },
+    { prefix: ["current_rentals", userId] },
     options,
   );
 }
@@ -54,11 +54,11 @@ export function getRentalById(rentalId: string) {
 }
 
 export function getUserRentalById(userId: string, rentalId: string) {
-  return kv.get<RentalRow>(["users", userId, "current_rentals", rentalId]);
+  return kv.get<RentalRow>(["current_rentals", userId, rentalId]);
 }
 
-export function removeRentalById(id: string) {
-  return kv.delete(["rentals", id]);
+export function removeRentalById(rentalId: string) {
+  return kv.delete(["rentals", rentalId]);
 }
 
 export async function removeUserRentalById(userId: string, rentalId: string) {
@@ -66,15 +66,13 @@ export async function removeUserRentalById(userId: string, rentalId: string) {
   const usersRowKey = ["users", userId];
   const rentalsRowKey = ["rentals", rentalId];
   const userCurrentRentalsRowKey = [
-    "users",
-    userId,
     "current_rentals",
+    userId,
     rentalId,
   ];
   const userRemovedRentalsRowKey = [
-    "users",
-    userId,
     "removed_rentals",
+    userId,
     rentalId,
   ];
   const [userRow, rentalsRow] = await kv.getMany<[UserRow, RentalRow]>([
@@ -126,10 +124,15 @@ export async function removeUserRentalById(userId: string, rentalId: string) {
     })
     .mutate({
       type: "sum",
-      key: ["users", userId, "current_rentals_count"],
+      key: ["current_rentals_count", userId],
       // NOTE: This is a very hacky way to subtract by one, since using `-1n`
       // directly will throw `RangeError: value must be a positive bigint`.
       value: new Deno.KvU64(0xffffffffffffffffn),
+    })
+    .mutate({
+      type: "sum",
+      key: ["removed_rentals_count", userId],
+      value: new Deno.KvU64(1n),
     })
     .commit();
 
@@ -186,12 +189,11 @@ export async function createNewRental(
   const rentalsRowKey = ["rentals", newRentalRow.id];
   const rentalsCountKey = ["rentals_count"];
   const userRentalsRowKey = [
-    "users",
-    newRentalRow.userId,
     "current_rentals",
+    newRentalRow.userId,
     newRentalRow.id,
   ];
-  const userRentalsCountKey = ["users", newRentalRow.userId, "rentals_count"];
+  const userRentalsCountKey = ["current_rentals_count", newRentalRow.userId];
 
   const tx = await kv.atomic()
     .check(moviesRow) // Ensure the movie has not been changed since we fetched it.
@@ -225,53 +227,37 @@ export async function createNewRental(
 /** NOTE: For debugging purposes only. */
 export async function deleteAllRentals() {
   const promises = [];
-  const userIdsWithRentals = [];
 
   for await (
-    const { key, value } of kv.list<RentalRow>({ prefix: ["rentals"] })
+    const { key } of kv.list<RentalRow>({ prefix: ["rentals"] })
   ) {
-    promises.push(kv.delete(["rentals", key[1] as string]));
-    userIdsWithRentals.push(value.userId);
+    promises.push(kv.delete(key));
   }
-  for (const userId of userIdsWithRentals) {
-    for await (
-      const { key } of kv.list<RentalRow>({
-        prefix: ["users", userId, "current_rentals"],
-      })
-    ) {
-      promises.push(
-        kv.delete(["users", userId, "current_rentals", key[3] as string]),
-      );
-    }
-    for await (
-      const { key } of kv.list<RentalRow>({
-        prefix: ["users", userId, "removed_rentals"],
-      })
-    ) {
-      promises.push(
-        kv.delete(["users", userId, "removed_rentals", key[3] as string]),
-      );
-    }
-    for await (
-      const { key } of kv.list<RentalRow>({
-        prefix: ["users", userId, "rentals"],
-      })
-    ) {
-      promises.push(
-        kv.delete(key),
-      );
-    }
-    promises.push(
-      kv.set(["users", userId, "current_rentals_count"], new Deno.KvU64(0n)),
-    );
-    promises.push(
-      kv.set(["users", userId, "removed_rentals_count"], new Deno.KvU64(0n)),
-    );
+  promises.push(kv.delete(["rentals_count"]));
+
+  for await (
+    const { key } of kv.list<RentalRow>({ prefix: ["current_rentals"] })
+  ) {
+    promises.push(kv.delete(key));
+  }
+  for await (
+    const { key } of kv.list<bigint>({ prefix: ["current_rentals_count"] })
+  ) {
+    promises.push(kv.delete(key));
+  }
+
+  for await (
+    const { key } of kv.list<RentalRow>({ prefix: ["removed_rentals"] })
+  ) {
+    promises.push(kv.delete(key));
+  }
+  for await (
+    const { key } of kv.list<bigint>({ prefix: ["removed_rentals_count"] })
+  ) {
+    promises.push(kv.delete(key));
   }
 
   // TODO(njncalub): Increment the available copies of the rented movies.
-
-  promises.push(kv.set(["rentals_count"], new Deno.KvU64(0n)));
 
   await Promise.all(promises);
 }

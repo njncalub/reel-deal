@@ -80,7 +80,7 @@ export async function deleteAllMovies() {
   for await (const { key } of allMoviesIter) {
     promises.push(kv.delete(["movies", key[1] as string]));
   }
-  promises.push(kv.set(["movies_count"], new Deno.KvU64(0n)));
+  promises.push(kv.delete(["movies_count"]));
 
   await Promise.all(promises);
 }

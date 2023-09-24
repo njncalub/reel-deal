@@ -37,7 +37,9 @@ export function transformToPublicUserData(
 ): PublicUserData {
   const res = PublicUserDataSchema.safeParse(data);
   if (!res.success) {
-    throw new Error("invalid user data");
+    throw new Error(
+      `invalid user data: ${res.error}, ${JSON.stringify(data)}}`,
+    );
   }
   return res.data;
 }
@@ -111,7 +113,7 @@ export async function deleteAllUsers() {
   for await (const { key } of allUsersByEmailIter) {
     promises.push(kv.delete(["users_by_email", key[1] as string]));
   }
-  promises.push(kv.set(["users_count"], new Deno.KvU64(0n)));
+  promises.push(kv.delete(["users_count"]));
 
   await Promise.all(promises);
 }
