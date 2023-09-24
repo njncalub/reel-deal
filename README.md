@@ -87,10 +87,8 @@ export const MovieRowSchema = BaseRowSchema.extend({
   - [ ] GET `/users/:user_id/rentals`
     - Description: Returns a specific user's rental history.
 - [ ] Movies:
-  - [ ] GET `/movies`
+  - [x] GET `/movies`
     - Description: Returns a list of movies.
-    - Query parameters:
-      - [ ] `available`: boolean, default=true
   - [ ] GET `/movies/:movie_id`
     - Description: Returns a specific movie's information.
 - [ ] Rentals:
@@ -108,11 +106,13 @@ export const MovieRowSchema = BaseRowSchema.extend({
 
 Check out the [demo.http](./demo.http) file for a sample flow of the requests, namely the:
 
-- [Register](./demo.http#:~:text=@name%20createUser)
-- [Login](./demo.http#:~:text=@name%20loginUser)
-- [List Users](./demo.http#:~:text=@name%20getUsers)
-- [List Users Parameterized](./demo.http#:~:text=@name%20getUsersWithQueryParams)
-- [Get User](./demo.http#:~:text=@name%20getUser)
+- Register (`createUser`)
+- Login (`loginUser`)
+- List Users (`getUsers`)
+- List Users Parameterized (`getUsersWithQueryParams`)
+- Get User (`getUser`)
+- List Movies (`getMovies`)
+- List Movies Parameterized (`getMoviesWithQueryParams`)
 
 > **NOTE**: Please install the [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) extension for [Visual Studio Code](https://code.visualstudio.com/) to run the requests. Once installed, you will be able to see the `Send Request` button on the top-left corner of the request blocks. This should open a new tab with the response. These should be ran in order, as some requests depend on the previous ones.
 

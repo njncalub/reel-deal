@@ -124,3 +124,88 @@ Content-Type: {{contentType}}
 # }
 GET {{baseUrl}}/api/users/{{loginUser.response.body.$.user.id}}
 Content-Type: {{contentType}}
+
+################################################################################
+# @name getMovies
+# TITLE: List Movies
+# DESCRIPTION: Lists all the available public information of Movies.
+# EXAMPLE RESPONSE:
+# {
+#   "results": [
+#     {
+#       "id": "01HB3CJFJ6AD9HARTEDZKK7DTS",
+#       "title": "On the Job",
+#       "genre": [
+#         "Action",
+#         "Crime",
+#         "Drama",
+#         "Thriller"
+#       ],
+#       "releaseYear": 2021,
+#       "rentalPrice": 100,
+#       "availableCopies": 2
+#     },
+#     {
+#       "id": "01HB3CJFJ6KZDAHRGTC27AKHP1",
+#       "title": "Heneral Luna",
+#       "genre": [
+#         "Action",
+#         "Biography",
+#         "History",
+#         "War"
+#       ],
+#       "releaseYear": 2015,
+#       "rentalPrice": 100,
+#       "availableCopies": 7
+#     },
+#     {
+#       "id": "01HB3CJFJ72FEBQNVN6T96TQ8M",
+#       "title": "Metro Manila",
+#       "genre": [
+#         "Crime",
+#         "Drama"
+#       ],
+#       "releaseYear": 2013,
+#       "rentalPrice": 100,
+#       "availableCopies": 5
+#     }
+#   ],
+#   "count": 3,
+#   "limit": 25,
+#   "reverse": false,
+#   "cursor": ""
+# }
+GET {{baseUrl}}/api/movies
+Content-Type: {{contentType}}
+
+################################################################################
+# @name getMoviesWithQueryParams
+# TITLE: List Movies Parameterized
+# DESCRIPTION: Lists all the available public information of Movies, with query parameters.
+# EXAMPLE RESPONSE:
+# {
+#   "results": [
+#     {
+#       "id": "01HB3CJFJ6KZDAHRGTC27AKHP1",
+#       "title": "Heneral Luna",
+#       "genre": [
+#         "Action",
+#         "Biography",
+#         "History",
+#         "War"
+#       ],
+#       "releaseYear": 2015,
+#       "rentalPrice": 100,
+#       "availableCopies": 7
+#     }
+#   ],
+#   "count": 3,
+#   "limit": 25,
+#   "reverse": false,
+#   "cursor": "AjAxSEIzQ0pGSjZBRDlIQVJURURaS0s3RFRTAA=="
+# }
+GET {{baseUrl}}/api/movies
+  ?cursor=AjAxSEIzQ0pGSjZBRDlIQVJURURaS0s3RFRTAA==
+  &limit=1
+  &reverse=false
+Content-Type: {{contentType}}
