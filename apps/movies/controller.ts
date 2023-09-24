@@ -80,4 +80,6 @@ export async function deleteAllMovies() {
     promises.push(kv.delete(["movies", key[1] as string]));
   }
   promises.push(kv.set(["movies_count"], new Deno.KvU64(0n)));
+
+  await Promise.all(promises);
 }

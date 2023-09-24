@@ -111,4 +111,6 @@ export async function deleteAllUsers() {
     promises.push(kv.delete(["users_by_email", key[1] as string]));
   }
   promises.push(kv.set(["users_count"], new Deno.KvU64(0n)));
+
+  await Promise.all(promises);
 }

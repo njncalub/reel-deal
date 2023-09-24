@@ -6,12 +6,12 @@ import * as $0 from "./routes/_404.tsx";
 import * as $1 from "./routes/_app.tsx";
 import * as $2 from "./routes/api/auth/login.ts";
 import * as $3 from "./routes/api/auth/refresh-tokens.ts";
-import * as $4 from "./routes/api/movies/[movieId]/index.ts";
+import * as $4 from "./routes/api/movies/[movieId].ts";
 import * as $5 from "./routes/api/movies/index.ts";
 import * as $6 from "./routes/api/rentals/[rentalId].ts";
-import * as $7 from "./routes/api/rentals/index.ts";
-import * as $8 from "./routes/api/users/[userId]/index.ts";
-import * as $9 from "./routes/api/users/[userId]/rentals.ts";
+import * as $7 from "./routes/api/rentals/_middleware.ts";
+import * as $8 from "./routes/api/rentals/index.ts";
+import * as $9 from "./routes/api/users/[userId].ts";
 import * as $10 from "./routes/api/users/index.ts";
 import * as $11 from "./routes/index.tsx";
 
@@ -21,12 +21,12 @@ const manifest = {
     "./routes/_app.tsx": $1,
     "./routes/api/auth/login.ts": $2,
     "./routes/api/auth/refresh-tokens.ts": $3,
-    "./routes/api/movies/[movieId]/index.ts": $4,
+    "./routes/api/movies/[movieId].ts": $4,
     "./routes/api/movies/index.ts": $5,
     "./routes/api/rentals/[rentalId].ts": $6,
-    "./routes/api/rentals/index.ts": $7,
-    "./routes/api/users/[userId]/index.ts": $8,
-    "./routes/api/users/[userId]/rentals.ts": $9,
+    "./routes/api/rentals/_middleware.ts": $7,
+    "./routes/api/rentals/index.ts": $8,
+    "./routes/api/users/[userId].ts": $9,
     "./routes/api/users/index.ts": $10,
     "./routes/index.tsx": $11,
   },

@@ -51,6 +51,17 @@ export async function saveToken(
   return token;
 }
 
-export function removeTokenById(id: string) {
+export function deleteTokenById(id: string) {
   return kv.delete(["tokens", id]);
+}
+
+export async function deleteAllTokens() {
+  const allTokensIter = kv.list<TokenRow>({ prefix: ["tokens"] });
+
+  const promises = [];
+  for await (const { key } of allTokensIter) {
+    promises.push(kv.delete(["tokens", key[1] as string]));
+  }
+
+  await Promise.all(promises);
 }

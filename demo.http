@@ -230,3 +230,69 @@ Content-Type: {{contentType}}
 # }
 GET {{baseUrl}}/api/movies/{{getMovies.response.body.$.results[1].id}}
 Content-Type: {{contentType}}
+
+################################################################################
+# @name createRental
+# TITLE: Create Rental
+# DESCRIPTION: Create a new Rental by the User.
+# EXAMPLE RESPONSE:
+# {
+#   "id": "01HB3SF4KNZR0Y6GSDKG45NWHE",
+#   "userId": "01HB306BDTMDFERZ04Q6S94B9N",
+#   "movieId": "01HB3CJFJ6KZDAHRGTC27AKHP1",
+#   "rentalDate": "2023-09-24T14:28:34.037Z",
+#   "dueDate": "2023-10-01T14:28:34.037Z"
+# }
+POST {{baseUrl}}/api/rentals
+Content-Type: {{contentType}}
+Authorization: Bearer {{loginUser.response.body.$.tokens.access.token}}
+
+{
+  "userId": "{{loginUser.response.body.$.user.id}}",
+  "movieId": "{{getMovies.response.body.$.results[1].id}}"
+}
+
+################################################################################
+# @name getRentals
+# TITLE: List Rentals
+# DESCRIPTION: Lists all the available information of Rentals by the User.
+# EXAMPLE RESPONSE:
+# {
+#   "results": [
+#     {
+#       "id": "01HB3SF4KNZR0Y6GSDKG45NWHE",
+#       "userId": "01HB306BDTMDFERZ04Q6S94B9N",
+#       "movieId": "01HB3CJFJ6KZDAHRGTC27AKHP1",
+#       "rentalDate": "2023-09-24T14:28:34.037Z",
+#       "dueDate": "2023-10-01T14:28:34.037Z"
+#     }
+#   ],
+#   "count": 1,
+#   "limit": 25,
+#   "reverse": false,
+#   "cursor": ""
+# }
+GET {{baseUrl}}/api/rentals
+Content-Type: {{contentType}}
+Authorization: Bearer {{loginUser.response.body.$.tokens.access.token}}
+
+################################################################################
+# @name getPreviousMovie
+# TITLE: Get Previous Movie
+# DESCRIPTION: Check the available copies of the previous movie.
+# EXAMPLE RESPONSE:
+# {
+#   "id": "01HB3CJFJ6KZDAHRGTC27AKHP1",
+#   "title": "Heneral Luna",
+#   "genre": [
+#     "Action",
+#     "Biography",
+#     "History",
+#     "War"
+#   ],
+#   "releaseYear": 2015,
+#   "rentalPrice": 100,
+#   "availableCopies": 6
+# }
+GET {{baseUrl}}/api/movies/{{getMovies.response.body.$.results[1].id}}
+Content-Type: {{contentType}}

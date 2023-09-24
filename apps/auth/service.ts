@@ -10,8 +10,8 @@ import {
 } from "./models.ts";
 import { getJwtPayload, getToken } from "./utils.ts";
 import {
+  deleteTokenById,
   getTokenById,
-  removeTokenById,
   saveToken,
 } from "@/apps/auth/controller.ts";
 import { getUserById } from "@/apps/users/controller.ts";
@@ -110,7 +110,7 @@ export async function refreshAccessToken(
   }
 
   // Remove the refresh token from the database.
-  await removeTokenById(refreshToken.token);
+  await deleteTokenById(refreshToken.token);
 
   // Generate new access and refresh tokens.
   return await generateLoginTokens(user);
