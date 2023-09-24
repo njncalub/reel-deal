@@ -30,3 +30,17 @@ To populate the database with sample data, run the following command:
 ```sh
 $ deno task db_populate_movies
 ```
+
+To connect to your production database using the [REPL](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop), run the following command:
+
+```sh
+$ DENO_KV_ACCESS_TOKEN="<your-access-token>" deno repl -A --unstable
+```
+
+```typescript
+const kv = await Deno.openKv(
+  "https://api.deno.com/databases/<database-id>/connect"
+);
+
+// See: https://docs.deno.com/kv/manual
+```
