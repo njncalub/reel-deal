@@ -28,6 +28,7 @@ This project uses [Deno KV](https://deno.com/kv), a new key-value store for [Den
 To populate the database with sample data, run the following command:
 
 ```sh
+$ deno task db_populate_users
 $ deno task db_populate_movies
 ```
 
