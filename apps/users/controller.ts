@@ -3,6 +3,7 @@ import { ulid } from "$std/ulid/mod.ts";
 import * as bcrypt from "bcrypt";
 
 import { kv } from "@/utils/db/kv.ts";
+
 import {
   NewUserPayload,
   PublicUserData,
@@ -75,7 +76,7 @@ export async function createNewUser(
   const usersByEmailKey = ["users_by_email", newUserRow.email];
   // We also need to keep track of the total number of users in order to
   // count the number of users in the database.
-  const usersCount = ["users_count"];
+  const usersCountKey = ["users_count"];
   const tx = await kv.atomic()
     .check({ key: usersKey, versionstamp: null })
     .check({ key: usersByEmailKey, versionstamp: null })
@@ -83,12 +84,12 @@ export async function createNewUser(
     .set(usersByEmailKey, newUserRow)
     .mutate({
       type: "sum",
-      key: usersCount,
+      key: usersCountKey,
       value: new Deno.KvU64(1n),
     })
     .commit();
 
-  if (!tx.ok) throw new Error("failed to create item");
+  if (!tx.ok) throw new Error("failed to create user");
 
   const getRes = await kv.get<PublicUserData>(usersKey);
   const user = getRes.value;

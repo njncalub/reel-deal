@@ -1,0 +1,105 @@
+# Please run the following task to populate the movies:
+# $ deno task db_populate_movies
+
+- id: ""
+  createdAt: ""
+  title: "Heneral Luna"
+  synopsis: "Set during the Philippine-American war, a short-tempered Filipino general faces an enemy more formidable than the American army: his own treacherous countrymen."
+  genre:
+    - "Action"
+    - "Biography"
+    - "History"
+    - "War"
+  releaseYear: 2015
+  rentalPrice: 100
+  availableCopies: 7
+  imdbUrl: "https://www.imdb.com/title/tt4944352"
+- id: ""
+  createdAt: ""
+  title: "On the Job"
+  synopsis: "Inspired by a real-life scandal in which prison inmates are temporarily released from prison to work as contract killers on behalf of politicians and high ranking military officials."
+  genre:
+    - "Action"
+    - "Crime"
+    - "Drama"
+    - "Thriller"
+  releaseYear: 2021
+  rentalPrice: 100
+  availableCopies: 2
+  imdbUrl: "https://www.imdb.com/title/tt2717558"
+- id: ""
+  createdAt: ""
+  title: "Miracle"
+  synopsis: "Elsa saw the blessed Virgin Mary who had changed her life and caused a hysteria in a poor isolated village."
+  genre:
+    - "Drama"
+  releaseYear: 1982
+  rentalPrice: 100
+  availableCopies: 8
+  imdbUrl: "https://www.imdb.com/title/tt0125144"
+- id: ""
+  createdAt: ""
+  title: "Metro Manila"
+  synopsis: "This riveting crime thriller follows Oscar, a recent emigrant to Manila who gets pulled into a harrowing world of corruption and violence when he takes a job as an armored car driver to support his family."
+  genre:
+    - "Crime"
+    - "Drama"
+  releaseYear: 2013
+  rentalPrice: 100
+  availableCopies: 5
+  imdbUrl: "https://www.imdb.com/title/tt1845838"
+- id: ""
+  createdAt: ""
+  title: "A Change of Heart"
+  synopsis: "The decision of three siblings to sell their ailing mother's property causes deeply burried resentment to resurface as each of them also faces difficulties within their own families."
+  genre:
+    - "Drama"
+    - "Family"
+  releaseYear: 2000
+  rentalPrice: 100
+  availableCopies: 2
+  imdbUrl: "https://www.imdb.com/title/tt0283037"
+- id: ""
+  createdAt: ""
+  title: "Bwakaw"
+  synopsis: "This comedy about growing old, fearing loneliness, and coming out of the closet stars one of the institutions of Philippine cinema, Eddie Garcia."
+  genre:
+    - "Drama"
+  releaseYear: 2012
+  rentalPrice: 100
+  availableCopies: 1
+  imdbUrl: "https://www.imdb.com/title/tt2244376"
+- id: ""
+  createdAt: ""
+  title: "That Thing Called Tadhana"
+  synopsis: 'A story about a broken-hearted girl who meets a boy in a not so normal way. Together, they go to places and find out "where do broken hearts go?".'
+  genre:
+    - "Comedy"
+    - "Drama"
+    - "Romance"
+  releaseYear: 2014
+  rentalPrice: 100
+  availableCopies: 6
+  imdbUrl: "https://www.imdb.com/title/tt4170436"
+- id: ""
+  createdAt: ""
+  title: "Feng Shui"
+  synopsis: "After finding a Feng Shui amulet, Joy starts to see a string of fortunate events come her way. Soon, she realizes it is, in fact, a curse. Now she must break the cycle of good fortune and death in order to save her family."
+  genre:
+    - "Drama"
+    - "Horror"
+    - "Thriller"
+  releaseYear: 2004
+  rentalPrice: 100
+  availableCopies: 8
+  imdbUrl: "https://www.imdb.com/title/tt0430082"
+- id: ""
+  createdAt: ""
+  title: "Smaller and Smaller Circles"
+  synopsis: "A serial killer in Payatas leaves the bodies of young boys in the dump as two Jesuit priests try to solve the murders."
+  genre:
+    - "Crime"
+  releaseYear: 2017
+  rentalPrice: 100
+  availableCopies: 0
+  imdbUrl: "https://www.imdb.com/title/tt7512304"

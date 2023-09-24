@@ -20,3 +20,13 @@ This project uses the [Deno](https://deno.land) JavaScript runtime to run the sc
 - Fill in the required values.
 - Watch the project directory and start the development server:
   - `deno task start`
+
+## Database
+
+This project uses [Deno KV](https://deno.com/kv), a new key-value store for [Deno](https://deno.com/).
+
+To populate the database with sample data, run the following command:
+
+```sh
+$ deno task db_populate_movies
+```

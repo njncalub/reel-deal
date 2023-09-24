@@ -17,12 +17,14 @@ This project uses [Deno KV](https://deno.com/kv), a new key-value store for [Den
 
 > **NOTE**: Due to design limitations of the datastore, we need to maintain separate keys if we want to create [indexes](https://docs.deno.com/kv/manual/secondary_indexes) or count the number of records. For example, the key `["users_by_email"]` indexes the users by their emails and the key `["users_count"]` holds the number of users.
 
-| Feature | Key Prefix           | Description                                |
-| ------- | -------------------- | ------------------------------------------ |
-| Auth    | `["tokens"]`         | Stores tokens for authentication.          |
-| Users   | `["users"]`          | Stores user information.                   |
-| Users   | `["users_by_email"]` | Stores user information, indexed by email. |
-| Users   | `["users_count"]`    | Stores the number of users.                |
+| Feature | Key                        | Description                                |
+| ------- | -------------------------- | ------------------------------------------ |
+| Auth    | `["tokens", x.token]`      | Stores tokens for authentication.          |
+| Users   | `["users", x.id]`          | Stores user information.                   |
+| Users   | `["users_by_email", x.id]` | Stores user information, indexed by email. |
+| Users   | `["users_count"]`          | Stores the number of users.                |
+| Movies  | `["movies", x.id]`         | Stores movie information.                  |
+| Movies  | `["movies_count"]`         | Stores the number of movies.               |
 
 ```typescript
 export const TokenRowSchema = z.object({
@@ -40,6 +42,17 @@ export const UserRowSchema = z.object({
   name: z.string(),
   hashedPassword: z.string(),
   createdAt: z.date(),
+});
+
+export const MovieRowSchema = BaseRowSchema.extend({
+  title: z.string(), // Primary Key: ["movies", x.id]
+  genre: z.array(z.string()),
+  releaseYear: z.number().positive().gte(1895).lte(2100),
+  rentalPrice: z.number().nonnegative(),
+  availableCopies: z.preprocess(
+    (value) => BigInt(value as number),
+    z.bigint().nonnegative()
+  ),
 });
 ```
 
