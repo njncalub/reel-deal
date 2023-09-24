@@ -1,7 +1,6 @@
 import { ulid } from "$std/ulid/mod.ts";
 
-import * as bcrypt from "bcrypt";
-
+import { compare, hash } from "@/utils/auth/bcrypt.ts";
 import { kv } from "@/utils/db/kv.ts";
 
 import {
@@ -20,7 +19,7 @@ export async function loginUsingEmailAndPassword(
   const user = res.value;
   if (!user) throw new Error("user not found");
 
-  const passwordMatch = await bcrypt.compare(password, user.hashedPassword);
+  const passwordMatch = await compare(password, user.hashedPassword);
   if (!passwordMatch) throw new Error("invalid password");
 
   return transformToPublicUserData(user);
@@ -65,10 +64,10 @@ export async function createNewUser(
     email: payload.email,
     name: payload.name,
     isAdmin: false,
-    hashedPassword: await bcrypt.hash(payload.password),
+    hashedPassword: await hash(payload.password),
   };
   if (!UserRowSchema.safeParse(newUserRow).success) {
-    throw new Error("invalid user payload");
+    throw new Error(`invalid user payload`);
   }
 
   const usersKey = ["users", newUserRow.id];
