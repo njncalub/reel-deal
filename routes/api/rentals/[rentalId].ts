@@ -30,7 +30,7 @@ export const handler: MethodHandler<
       });
     }
 
-    return Response.json(transformToPublicRentalData(rental));
+    return Response.json(await transformToPublicRentalData(rental));
   },
   async DELETE(_req, ctx) {
     const userId = ctx.state.userId;
@@ -48,6 +48,8 @@ export const handler: MethodHandler<
       });
     }
 
-    return Response.json(rental, { status: Status.OK });
+    return Response.json(await transformToPublicRentalData(rental), {
+      status: Status.OK,
+    });
   },
 };

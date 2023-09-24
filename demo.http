@@ -220,7 +220,7 @@ Content-Type: {{contentType}}
 #   "rentalPrice": 100,
 #   "availableCopies": 7
 # }
-GET {{baseUrl}}/api/movies/{{getMovies.response.body.$.results[1].id}}
+GET {{baseUrl}}/api/movies/{{getMovies.response.body.$.results[0].id}}
 Content-Type: {{contentType}}
 
 ################################################################################
@@ -233,7 +233,21 @@ Content-Type: {{contentType}}
 #   "userId": "01HB306BDTMDFERZ04Q6S94B9N",
 #   "movieId": "01HB3CJFJ6KZDAHRGTC27AKHP1",
 #   "rentalDate": "2023-09-24T14:28:34.037Z",
-#   "dueDate": "2023-10-01T14:28:34.037Z"
+#   "dueDate": "2023-10-01T14:28:34.037Z",
+#   "isReturned": false,
+#   "movie": {
+#     "id": "01HB3CJFJ6KZDAHRGTC27AKHP1",
+#     "title": "Heneral Luna",
+#     "genre": [
+#       "Action",
+#       "Biography",
+#       "History",
+#       "War"
+#     ],
+#     "releaseYear": 2015,
+#     "rentalPrice": 100,
+#     "availableCopies": 6
+#   }
 # }
 POST {{baseUrl}}/api/rentals
 Content-Type: {{contentType}}
@@ -241,7 +255,7 @@ Authorization: Bearer {{loginUser.response.body.$.tokens.access.token}}
 
 {
   "userId": "{{loginUser.response.body.$.user.id}}",
-  "movieId": "{{getMovies.response.body.$.results[1].id}}"
+  "movieId": "{{getMovies.response.body.$.results[0].id}}"
 }
 
 ################################################################################
@@ -256,7 +270,21 @@ Authorization: Bearer {{loginUser.response.body.$.tokens.access.token}}
 #       "userId": "01HB306BDTMDFERZ04Q6S94B9N",
 #       "movieId": "01HB3CJFJ6KZDAHRGTC27AKHP1",
 #       "rentalDate": "2023-09-24T14:28:34.037Z",
-#       "dueDate": "2023-10-01T14:28:34.037Z"
+#       "dueDate": "2023-10-01T14:28:34.037Z",
+#       "isReturned": false
+#       "movie": {
+#         "id": "01HB3CJFJ6KZDAHRGTC27AKHP1",
+#         "title": "Heneral Luna",
+#         "genre": [
+#           "Action",
+#           "Biography",
+#           "History",
+#           "War"
+#         ],
+#         "releaseYear": 2015,
+#         "rentalPrice": 100,
+#         "availableCopies": 6
+#       }
 #     }
 #   ],
 #   "count": 1,
@@ -286,7 +314,7 @@ Authorization: Bearer {{loginUser.response.body.$.tokens.access.token}}
 #   "rentalPrice": 100,
 #   "availableCopies": 6
 # }
-GET {{baseUrl}}/api/movies/{{getMovies.response.body.$.results[1].id}}
+GET {{baseUrl}}/api/movies/{{getMovies.response.body.$.results[0].id}}
 Content-Type: {{contentType}}
 
 ################################################################################
@@ -300,7 +328,20 @@ Content-Type: {{contentType}}
 #   "movieId": "01HB3CJFJ6KZDAHRGTC27AKHP1",
 #   "rentalDate": "2023-09-24T14:28:34.037Z",
 #   "dueDate": "2023-10-01T14:28:34.037Z",
-#   "isReturned": false
+#   "isReturned": false,
+#   "movie": {
+#     "id": "01HB3CJFJ6KZDAHRGTC27AKHP1",
+#     "title": "Heneral Luna",
+#     "genre": [
+#       "Action",
+#       "Biography",
+#       "History",
+#       "War"
+#     ],
+#     "releaseYear": 2015,
+#     "rentalPrice": 100,
+#     "availableCopies": 6
+#   }
 # }
 GET {{baseUrl}}/api/rentals/{{createRental.response.body.$.id}}
 Content-Type: {{contentType}}
@@ -315,15 +356,48 @@ Authorization: Bearer {{loginUser.response.body.$.tokens.access.token}}
 #   "userId": "01HB306BDTMDFERZ04Q6S94B9N",
 #   "movieId": "01HB3CJFJ6KZDAHRGTC27AKHP1",
 #   "id": "01HB3SF4KNZR0Y6GSDKG45NWHE",
-#   "createdAt": "2023-09-24T14:28:34.037Z",
 #   "rentalDate": "2023-09-24T14:28:34.037Z",
 #   "dueDate": "2023-10-01T14:28:34.037Z",
 #   "isReturned": true,
 #   "returnedDate": "2023-09-24T15:52:58.089Z"
+#   "movie": {
+#     "id": "01HB3CJFJ6KZDAHRGTC27AKHP1",
+#     "title": "Heneral Luna",
+#     "genre": [
+#       "Action",
+#       "Biography",
+#       "History",
+#       "War"
+#     ],
+#     "releaseYear": 2015,
+#     "rentalPrice": 100,
+#     "availableCopies": 7
+#   }
 # }
 DELETE {{baseUrl}}/api/rentals/{{createRental.response.body.$.id}}
 Content-Type: {{contentType}}
 Authorization: Bearer {{loginUser.response.body.$.tokens.access.token}}
+
+################################################################################
+# @name getPreviousMovieAgain
+# TITLE: Get Previous Movie Again
+# DESCRIPTION: Check the available copies of the previous movie.
+# EXAMPLE RESPONSE:
+# {
+#   "id": "01HB3CJFJ6KZDAHRGTC27AKHP1",
+#   "title": "Heneral Luna",
+#   "genre": [
+#     "Action",
+#     "Biography",
+#     "History",
+#     "War"
+#   ],
+#   "releaseYear": 2015,
+#   "rentalPrice": 100,
+#   "availableCopies": 6
+# }
+GET {{baseUrl}}/api/movies/{{getMovies.response.body.$.results[0].id}}
+Content-Type: {{contentType}}
 
 ################################################################################
 

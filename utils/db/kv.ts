@@ -21,7 +21,7 @@ export async function collectValues<T1, T2 = T1>(
 ) {
   const values: T2[] = [];
   for await (const { value } of iter) {
-    values.push(transform(value));
+    values.push(await transform(value));
   }
   return values;
 }

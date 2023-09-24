@@ -15,9 +15,9 @@ import {
 } from "@/apps/rentals/controller.ts";
 import { getPaginationParams } from "@/utils/http/pagination.ts";
 import { collectValues } from "@/utils/db/kv.ts";
+import { guardDebugMode } from "@/utils/auth/checkDebugMode.ts";
 
 import { State } from "./_middleware.ts";
-import { guardDebugMode } from "@/utils/auth/checkDebugMode.ts";
 
 export const handler: MethodHandler<
   PublicRentalData | PublicRentalData[],
@@ -64,7 +64,7 @@ export const handler: MethodHandler<
       });
     }
 
-    return Response.json(transformToPublicRentalData(rental), {
+    return Response.json(await transformToPublicRentalData(rental), {
       status: Status.Created,
     });
   },

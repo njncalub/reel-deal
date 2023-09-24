@@ -152,6 +152,7 @@ Check out the [demo.http](./demo.http) file for a sample flow of the requests, n
 - Get Previous Movie (`getPreviousMovie`)
 - Get Rental (`getRental`)
 - Remove Rental (`removeRental`)
+- Get Previous Movie Again (`getPreviousMovieAgain`)
 
 > **NOTE**: Please install the [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) extension for [Visual Studio Code](https://code.visualstudio.com/) to run the requests. Once installed, you will be able to see the `Send Request` button on the top-left corner of the request blocks. This should open a new tab with the response. These should be ran in order, as some requests depend on the previous ones.
 

@@ -12,6 +12,7 @@ import {
   RentalRow,
   RentalRowSchema,
 } from "./models.ts";
+import { transformToPublicMovieData } from "@/apps/movies/controller.ts";
 
 export async function countAllRentals() {
   const res = await kv.get<Deno.KvU64>(["rentals_count"]);
@@ -25,14 +26,29 @@ export async function countAllRentalsByUserId(userId: string) {
   return Number(count);
 }
 
-export function transformToPublicRentalData(
+export async function transformToPublicRentalData(
   data: RentalRow | PublicRentalData,
-): PublicRentalData {
+): Promise<PublicRentalData> {
   const res = PublicRentalDataSchema.safeParse(data);
   if (!res.success) {
     throw new Error("invalid rental data");
   }
-  return res.data;
+
+  // Get the movie details from the movieId.
+  // TODO(njncalub): Better to do this outside and use Promise.all.
+  const moviesKey = ["movies", data.movieId];
+  const moviesRes = await kv.get<MovieRow>(moviesKey);
+  if (!moviesRes.value) {
+    throw new Error(`movie ${data.movieId} not found`);
+  }
+
+  const movie = transformToPublicMovieData(moviesRes.value);
+  const withEmbed: PublicRentalData = {
+    ...res.data,
+    movie,
+  };
+
+  return withEmbed;
 }
 
 export function listRentals(options?: Deno.KvListOptions) {
