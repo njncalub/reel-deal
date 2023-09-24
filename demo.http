@@ -15,7 +15,7 @@
 @contentType = application/json
 @userName = John Doe
 @userEmail = john.doe@example.com
-@userPassword = My-Password-123
+@userPassword = My-Password-1234
 
 ################################################################################
 # @name createUser
@@ -208,4 +208,25 @@ GET {{baseUrl}}/api/movies
   ?cursor=AjAxSEIzQ0pGSjZBRDlIQVJURURaS0s3RFRTAA==
   &limit=1
   &reverse=false
+Content-Type: {{contentType}}
+
+################################################################################
+# @name getMovie
+# TITLE: Get Movie
+# DESCRIPTION: Gets the available public information of a specific Movie.
+# EXAMPLE RESPONSE:
+# {
+#   "id": "01HB3CJFJ6KZDAHRGTC27AKHP1",
+#   "title": "Heneral Luna",
+#   "genre": [
+#     "Action",
+#     "Biography",
+#     "History",
+#     "War"
+#   ],
+#   "releaseYear": 2015,
+#   "rentalPrice": 100,
+#   "availableCopies": 7
+# }
+GET {{baseUrl}}/api/movies/{{getMovies.response.body.$.results[1].id}}
 Content-Type: {{contentType}}
