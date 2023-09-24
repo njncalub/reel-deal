@@ -1,11 +1,6 @@
 import { Handlers as MethodHandler } from "$fresh/server.ts";
-import { Status } from "$std/http/http_status.ts";
 
-import {
-  NewMoviePayload,
-  NewMoviePayloadSchema,
-  PublicMovieData,
-} from "@/apps/movies/models.ts";
+import { PublicMovieData } from "@/apps/movies/models.ts";
 import {
   countAllMovies,
   deleteAllMovies,
