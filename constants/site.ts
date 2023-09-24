@@ -6,4 +6,4 @@ export const DEFAULT_SITE_DESCRIPTION =
   "Allows users to browse available movies, rent movies, and view their rental history.";
 
 /** The site url to use in the meta tags. */
-export const DEFAULT_SITE_URL = "https://reel-deal.deno.dev/";
+export const DEFAULT_SITE_URL = "https://reel-deal.napjose.ph/";
