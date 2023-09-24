@@ -99,6 +99,7 @@ export async function createNewUser(
   return user;
 }
 
+/** NOTE: For debugging purposes only. */
 export async function deleteAllUsers() {
   const allUsersIter = kv.list<UserRow>({ prefix: ["users"] });
   const allUsersByEmailIter = kv.list<UserRow>({ prefix: ["users_by_email"] });

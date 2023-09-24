@@ -55,6 +55,7 @@ export function deleteTokenById(id: string) {
   return kv.delete(["tokens", id]);
 }
 
+/** NOTE: For debugging purposes only. */
 export async function deleteAllTokens() {
   const allTokensIter = kv.list<TokenRow>({ prefix: ["tokens"] });
 

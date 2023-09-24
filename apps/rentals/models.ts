@@ -10,6 +10,7 @@ export const RentalRowSchema = BaseRowSchema.extend({
 
   // Extra information:
   isReturned: z.boolean().default(false).optional(),
+  returnedDate: z.date().optional(),
 });
 export type RentalRow = z.infer<typeof RentalRowSchema>;
 
@@ -19,6 +20,8 @@ export const PublicRentalDataSchema = RentalRowSchema.pick({
   movieId: true,
   rentalDate: true,
   dueDate: true,
+  isReturned: true,
+  returnedDate: true,
 });
 export type PublicRentalData = z.infer<typeof PublicRentalDataSchema>;
 

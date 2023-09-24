@@ -43,7 +43,10 @@ export function listUserRentalsByUserId(
   userId: string,
   options?: Deno.KvListOptions,
 ) {
-  return kv.list<RentalRow>({ prefix: ["users", userId, "rentals"] }, options);
+  return kv.list<RentalRow>(
+    { prefix: ["users", userId, "current_rentals"] },
+    options,
+  );
 }
 
 export function getRentalById(rentalId: string) {
@@ -51,15 +54,88 @@ export function getRentalById(rentalId: string) {
 }
 
 export function getUserRentalById(userId: string, rentalId: string) {
-  return kv.get<RentalRow>(["users", userId, "rentals", rentalId]);
+  return kv.get<RentalRow>(["users", userId, "current_rentals", rentalId]);
 }
 
 export function removeRentalById(id: string) {
   return kv.delete(["rentals", id]);
 }
 
-export function removeUserRentalById(userId: string, rentalId: string) {
-  return kv.delete(["users", userId, "rentals", rentalId]);
+export async function removeUserRentalById(userId: string, rentalId: string) {
+  // Get the user and rental to make sure they exist.
+  const usersRowKey = ["users", userId];
+  const rentalsRowKey = ["rentals", rentalId];
+  const userCurrentRentalsRowKey = [
+    "users",
+    userId,
+    "current_rentals",
+    rentalId,
+  ];
+  const userRemovedRentalsRowKey = [
+    "users",
+    userId,
+    "removed_rentals",
+    rentalId,
+  ];
+  const [userRow, rentalsRow] = await kv.getMany<[UserRow, RentalRow]>([
+    usersRowKey,
+    rentalsRowKey,
+  ]);
+  if (userRow.value === null) {
+    throw new Error(`user ${userId} not found`);
+  }
+  if (rentalsRow.value === null) {
+    throw new Error(`rental ${rentalId} not found`);
+  }
+
+  // Get the rented movie.
+  const moviesRowKey = ["movies", rentalsRow.value.movieId];
+  const moviesRow = await kv.get<MovieRow>(moviesRowKey);
+  if (moviesRow.value === null) {
+    throw new Error(`movie ${rentalsRow.value.movieId} not found`);
+  }
+
+  // Increment the available copies.
+  const newMoviesRow: MovieRow = {
+    ...moviesRow.value,
+    availableCopies: moviesRow.value.availableCopies + 1n,
+  };
+
+  // Update the user's rental.
+  const newRentalRow: RentalRow = {
+    ...rentalsRow.value,
+    isReturned: true,
+    returnedDate: new Date(),
+  };
+
+  const tx = await kv.atomic()
+    .check(userRow) // Ensure the user has not been changed since we fetched it.
+    .check(rentalsRow) // Ensure the rental has not been changed since we fetched it.
+    .check(moviesRow) // Ensure the movie has not been changed since we fetched it.
+    .check({ key: userRemovedRentalsRowKey, versionstamp: null }) // Ensure the removed user rental does not already exist.
+    .delete(userCurrentRentalsRowKey)
+    .set(rentalsRowKey, newRentalRow)
+    .set(userRemovedRentalsRowKey, newRentalRow)
+    .set(moviesRowKey, newMoviesRow)
+    .mutate({
+      type: "sum",
+      key: ["rentals_count"],
+      // NOTE: This is a very hacky way to subtract by one, since using `-1n`
+      // directly will throw `RangeError: value must be a positive bigint`.
+      value: new Deno.KvU64(0xffffffffffffffffn),
+    })
+    .mutate({
+      type: "sum",
+      key: ["users", userId, "current_rentals_count"],
+      // NOTE: This is a very hacky way to subtract by one, since using `-1n`
+      // directly will throw `RangeError: value must be a positive bigint`.
+      value: new Deno.KvU64(0xffffffffffffffffn),
+    })
+    .commit();
+
+  if (!tx.ok) throw new Error("failed to remove rental");
+
+  return kv.get<PublicRentalData>(rentalsRowKey);
 }
 
 export async function createNewRental(
@@ -112,7 +188,7 @@ export async function createNewRental(
   const userRentalsRowKey = [
     "users",
     newRentalRow.userId,
-    "rentals",
+    "current_rentals",
     newRentalRow.id,
   ];
   const userRentalsCountKey = ["users", newRentalRow.userId, "rentals_count"];
@@ -146,6 +222,7 @@ export async function createNewRental(
   return rental;
 }
 
+/** NOTE: For debugging purposes only. */
 export async function deleteAllRentals() {
   const promises = [];
   const userIdsWithRentals = [];
@@ -159,17 +236,40 @@ export async function deleteAllRentals() {
   for (const userId of userIdsWithRentals) {
     for await (
       const { key } of kv.list<RentalRow>({
+        prefix: ["users", userId, "current_rentals"],
+      })
+    ) {
+      promises.push(
+        kv.delete(["users", userId, "current_rentals", key[3] as string]),
+      );
+    }
+    for await (
+      const { key } of kv.list<RentalRow>({
+        prefix: ["users", userId, "removed_rentals"],
+      })
+    ) {
+      promises.push(
+        kv.delete(["users", userId, "removed_rentals", key[3] as string]),
+      );
+    }
+    for await (
+      const { key } of kv.list<RentalRow>({
         prefix: ["users", userId, "rentals"],
       })
     ) {
       promises.push(
-        kv.delete(["users", userId, "rentals", key[3] as string]),
+        kv.delete(key),
       );
     }
     promises.push(
-      kv.set(["users", userId, "rentals_count"], new Deno.KvU64(0n)),
+      kv.set(["users", userId, "current_rentals_count"], new Deno.KvU64(0n)),
+    );
+    promises.push(
+      kv.set(["users", userId, "removed_rentals_count"], new Deno.KvU64(0n)),
     );
   }
+
+  // TODO(njncalub): Increment the available copies of the rented movies.
 
   promises.push(kv.set(["rentals_count"], new Deno.KvU64(0n)));
 

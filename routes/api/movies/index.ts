@@ -9,6 +9,7 @@ import {
 } from "@/apps/movies/controller.ts";
 import { getPaginationParams } from "@/utils/http/pagination.ts";
 import { collectValues } from "@/utils/db/kv.ts";
+import { guardDebugMode } from "@/utils/auth/checkDebugMode.ts";
 
 export const handler: MethodHandler<PublicMovieData | PublicMovieData[]> = {
   async GET(req) {
@@ -28,8 +29,11 @@ export const handler: MethodHandler<PublicMovieData | PublicMovieData[]> = {
       cursor: iter.cursor,
     });
   },
-  async DELETE() {
-    // Only used for debugging purposes.
+  async DELETE(req) {
+    // NOTE: Only used for debugging purposes.
+    const err = guardDebugMode(req);
+    if (err) return err;
+
     await deleteAllMovies();
 
     return Response.json({

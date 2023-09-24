@@ -14,11 +14,11 @@ We recommend using [Visual Studio Code](https://code.visualstudio.com/), with th
 
 ## Deno
 
-This project uses the [Deno](https://deno.land) JavaScript runtime to run the scripts. You can check the manual at https://deno.land/manual/introduction.
+This project uses the [Deno](https://deno.land) JavaScript runtime to run the scripts. For more information, you can check the official documentation at https://deno.land/manual/introduction.
 
 - Create a `.env` file from the `.env.template`.
 - Fill in the required values.
-- Watch the project directory and start the development server:
+- Start the development server:
   - `deno task start`
 
 ## Database

@@ -9,6 +9,8 @@ import {
 import { PublicUserData } from "@/apps/users/models.ts";
 import { loginUsingEmailAndPassword } from "@/apps/users/controller.ts";
 import { generateLoginTokens } from "@/apps/auth/service.ts";
+import { deleteAllTokens } from "@/apps/auth/controller.ts";
+import { guardDebugMode } from "@/utils/auth/checkDebugMode.ts";
 
 export const handler: MethodHandler<LoginResponse> = {
   async POST(req) {
@@ -36,5 +38,16 @@ export const handler: MethodHandler<LoginResponse> = {
 
     const resp = await generateLoginTokens(user);
     return Response.json(resp);
+  },
+  async DELETE(req) {
+    // NOTE: Only used for debugging purposes.
+    const err = guardDebugMode(req);
+    if (err) return err;
+
+    await deleteAllTokens();
+
+    return Response.json({
+      message: "all tokens deleted",
+    });
   },
 };

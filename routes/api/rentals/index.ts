@@ -17,6 +17,7 @@ import { getPaginationParams } from "@/utils/http/pagination.ts";
 import { collectValues } from "@/utils/db/kv.ts";
 
 import { State } from "./_middleware.ts";
+import { guardDebugMode } from "@/utils/auth/checkDebugMode.ts";
 
 export const handler: MethodHandler<
   PublicRentalData | PublicRentalData[],
@@ -63,7 +64,9 @@ export const handler: MethodHandler<
       });
     }
 
-    return Response.json(transformToPublicRentalData(rental));
+    return Response.json(transformToPublicRentalData(rental), {
+      status: Status.Created,
+    });
   },
   async GET(req, ctx) {
     const userId = ctx.state.userId;
@@ -87,8 +90,11 @@ export const handler: MethodHandler<
       cursor: iter.cursor,
     });
   },
-  async DELETE() {
-    // Only used for debugging purposes.
+  async DELETE(req) {
+    // NOTE: Only used for debugging purposes.
+    const err = guardDebugMode(req);
+    if (err) return err;
+
     await deleteAllRentals();
 
     return Response.json({

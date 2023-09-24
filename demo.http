@@ -4,12 +4,6 @@
 # ? ----------------------------------------------------------------------------
 # ? Modify the following variables before running your requests:
 # ? ----------------------------------------------------------------------------
-# Defaults:
-# @baseUrl = https://reel-deal.napjose.ph
-# @contentType = application/json
-# @userName = John Doe
-# @userEmail = john.doe@example.com
-# @userPassword = My-Password-123
 
 @baseUrl = https://reel-deal.napjose.ph
 @contentType = application/json
@@ -108,8 +102,7 @@ Content-Type: {{contentType}}
 #   "cursor": "AjAxSEIwWlFFVDhROENHODEzMVZXN0pQMkFZAA=="
 # }
 GET {{baseUrl}}/api/users
-  ?cursor=AjAxSEIzMDZCRFRNREZFUlowNFE2Uzk0QjlOAA==
-  &limit=1
+  ?limit=1
   &reverse=true
 Content-Type: {{contentType}}
 
@@ -205,8 +198,7 @@ Content-Type: {{contentType}}
 #   "cursor": "AjAxSEIzQ0pGSjZBRDlIQVJURURaS0s3RFRTAA=="
 # }
 GET {{baseUrl}}/api/movies
-  ?cursor=AjAxSEIzQ0pGSjZBRDlIQVJURURaS0s3RFRTAA==
-  &limit=1
+  ?limit=1
   &reverse=false
 Content-Type: {{contentType}}
 
@@ -296,3 +288,87 @@ Authorization: Bearer {{loginUser.response.body.$.tokens.access.token}}
 # }
 GET {{baseUrl}}/api/movies/{{getMovies.response.body.$.results[1].id}}
 Content-Type: {{contentType}}
+
+################################################################################
+# @name getRental
+# TITLE: Get Rental
+# DESCRIPTION: Gets the available information of a Rental by a specific User.
+# EXAMPLE RESPONSE:
+# {
+#   "id": "01HB3SF4KNZR0Y6GSDKG45NWHE",
+#   "userId": "01HB306BDTMDFERZ04Q6S94B9N",
+#   "movieId": "01HB3CJFJ6KZDAHRGTC27AKHP1",
+#   "rentalDate": "2023-09-24T14:28:34.037Z",
+#   "dueDate": "2023-10-01T14:28:34.037Z",
+#   "isReturned": false
+# }
+GET {{baseUrl}}/api/rentals/{{createRental.response.body.$.id}}
+Content-Type: {{contentType}}
+Authorization: Bearer {{loginUser.response.body.$.tokens.access.token}}
+
+################################################################################
+# @name removeRental
+# TITLE: Remove Rental
+# DESCRIPTION: Returns the Rental by a specific User.
+# EXAMPLE RESPONSE:
+# {
+#   "userId": "01HB306BDTMDFERZ04Q6S94B9N",
+#   "movieId": "01HB3CJFJ6KZDAHRGTC27AKHP1",
+#   "id": "01HB3SF4KNZR0Y6GSDKG45NWHE",
+#   "createdAt": "2023-09-24T14:28:34.037Z",
+#   "rentalDate": "2023-09-24T14:28:34.037Z",
+#   "dueDate": "2023-10-01T14:28:34.037Z",
+#   "isReturned": true,
+#   "returnedDate": "2023-09-24T15:52:58.089Z"
+# }
+DELETE {{baseUrl}}/api/rentals/{{createRental.response.body.$.id}}
+Content-Type: {{contentType}}
+Authorization: Bearer {{loginUser.response.body.$.tokens.access.token}}
+
+################################################################################
+
+# ! ONLY FOR DEBUGGING PURPOSES. POPULATE `xDebugModeKey` WITH THE VALUE OF THE
+# ! CORRECT KEY BEFORE RUNNING THE REQUESTS.
+# ! ----------------------------------------------------------------------------
+
+@xDebugModeKey =
+
+################################################################################
+# @name deleteAllRentals
+# TITLE: Delete Rentals
+# DESCRIPTION: Deletes all the Rentals.
+DELETE {{baseUrl}}/api/rentals
+Content-Type: {{contentType}}
+Authorization: Bearer {{loginUser.response.body.$.tokens.access.token}}
+X-Debug-Mode: true
+X-Debug-Mode-Key: {{xDebugModeKey}}
+
+################################################################################
+# @name deleteAllMovies
+# TITLE: Delete Movies
+# DESCRIPTION: Deletes all the Movies.
+DELETE {{baseUrl}}/api/movies
+Content-Type: {{contentType}}
+Authorization: Bearer {{loginUser.response.body.$.tokens.access.token}}
+X-Debug-Mode: true
+X-Debug-Mode-Key: {{xDebugModeKey}}
+
+################################################################################
+# @name deleteAllUsers
+# TITLE: Delete Users
+# DESCRIPTION: Deletes all the Users.
+DELETE {{baseUrl}}/api/users
+Content-Type: {{contentType}}
+Authorization: Bearer {{loginUser.response.body.$.tokens.access.token}}
+X-Debug-Mode: true
+X-Debug-Mode-Key: {{xDebugModeKey}}
+
+################################################################################
+# @name deleteAllTokens
+# TITLE: Delete Tokens
+# DESCRIPTION: Deletes all the Tokens.
+DELETE {{baseUrl}}/api/auth/login
+Content-Type: {{contentType}}
+Authorization: Bearer {{loginUser.response.body.$.tokens.access.token}}
+X-Debug-Mode: true
+X-Debug-Mode-Key: {{xDebugModeKey}}

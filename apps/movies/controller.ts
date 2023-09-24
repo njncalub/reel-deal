@@ -72,6 +72,7 @@ export async function createNewMovie(
   return movie;
 }
 
+/** NOTE: For debugging purposes only. */
 export async function deleteAllMovies() {
   const allMoviesIter = kv.list<MovieRow>({ prefix: ["movies"] });
 

@@ -15,6 +15,7 @@ import {
 } from "@/apps/users/controller.ts";
 import { getPaginationParams } from "@/utils/http/pagination.ts";
 import { collectValues } from "@/utils/db/kv.ts";
+import { guardDebugMode } from "@/utils/auth/checkDebugMode.ts";
 
 export const handler: MethodHandler<PublicUserData | PublicUserData[]> = {
   async POST(req) {
@@ -45,7 +46,9 @@ export const handler: MethodHandler<PublicUserData | PublicUserData[]> = {
       });
     }
 
-    return Response.json(transformToPublicUserData(user));
+    return Response.json(transformToPublicUserData(user), {
+      status: Status.Created,
+    });
   },
   async GET(req) {
     const url = new URL(req.url);
@@ -64,8 +67,11 @@ export const handler: MethodHandler<PublicUserData | PublicUserData[]> = {
       cursor: iter.cursor,
     });
   },
-  async DELETE() {
-    // Only used for debugging purposes.
+  async DELETE(req) {
+    // NOTE: Only used for debugging purposes.
+    const err = guardDebugMode(req);
+    if (err) return err;
+
     await deleteAllUsers();
 
     return Response.json({

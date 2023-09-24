@@ -17,18 +17,20 @@ This project uses [Deno KV](https://deno.com/kv), a new key-value store for [Den
 
 > **NOTE**: Due to design limitations of the datastore, we need to maintain separate keys if we want to create [indexes](https://docs.deno.com/kv/manual/secondary_indexes) or count the number of records. For example, the key `["users_by_email"]` indexes the users by their emails and the key `["users_count"]` holds the number of users.
 
-| Feature | Key                                | Value       | Description                                |
-| ------- | ---------------------------------- | ----------- | ------------------------------------------ |
-| Auth    | `["tokens", t.token]`              | `TokenRow`  | Stores tokens for authentication.          |
-| Users   | `["users", u.id]`                  | `UserRow`   | Stores user information.                   |
-| Users   | `["users_by_email", u.email]`      | `UserRow`   | Stores user information, indexed by email. |
-| Users   | `["users_count"]`                  | `bigint`    | Stores the number of users.                |
-| Movies  | `["movies", m.id]`                 | `MovieRow`  | Stores movie information.                  |
-| Movies  | `["movies_count"]`                 | `bigint`    | Stores the number of movies.               |
-| Rentals | `["rentals", r.id]`                | `RentalRow` | Stores rental information.                 |
-| Rentals | `["rentals_count"]`                | `bigint`    | Stores the number of rentals.              |
-| Rentals | `["users", u.id, "rentals", r.id]` | `RentalRow` | Stores the rentals for a user.             |
-| Rentals | `["users", u.id, "rentals_count"]` | `bigint`    | Stores the number of rentals for a user.   |
+| Feature | Key                                        | Value       | Description                                      |
+| ------- | ------------------------------------------ | ----------- | ------------------------------------------------ |
+| Auth    | `["tokens", t.token]`                      | `TokenRow`  | Stores tokens for authentication.                |
+| Users   | `["users", u.id]`                          | `UserRow`   | Stores user information.                         |
+| Users   | `["users_by_email", u.email]`              | `UserRow`   | Stores user information, indexed by email.       |
+| Users   | `["users_count"]`                          | `bigint`    | Stores the number of users.                      |
+| Movies  | `["movies", m.id]`                         | `MovieRow`  | Stores movie information.                        |
+| Movies  | `["movies_count"]`                         | `bigint`    | Stores the number of movies.                     |
+| Rentals | `["rentals", r.id]`                        | `RentalRow` | Stores rental information.                       |
+| Rentals | `["rentals_count"]`                        | `bigint`    | Stores the number of rentals.                    |
+| Rentals | `["users", u.id, "current_rentals", r.id]` | `RentalRow` | Stores the rentals for a user.                   |
+| Rentals | `["users", u.id, "current_rentals_count"]` | `bigint`    | Stores the number of rentals for a user.         |
+| Rentals | `["users", u.id, "removed_rentals", r.id]` | `RentalRow` | Stores the removed rentals for a user.           |
+| Rentals | `["users", u.id, "removed_rentals_count"]` | `bigint`    | Stores the number of removed rentals for a user. |
 
 ```typescript
 export const TokenRowSchema = z.object({
@@ -37,7 +39,6 @@ export const TokenRowSchema = z.object({
   type: z.enum(["access_token", "refresh_token"]),
   expires: z.date(),
   blacklisted: z.boolean(),
-  createdAt: z.date(),
 });
 
 export const UserRowSchema = z.object({
@@ -45,7 +46,6 @@ export const UserRowSchema = z.object({
   email: z.string().email(), // Primary Key: ["users_by_email", u.email]
   name: z.string(),
   hashedPassword: z.string(),
-  createdAt: z.date(),
 });
 
 export const MovieRowSchema = z.object({
@@ -61,49 +61,57 @@ export const MovieRowSchema = z.object({
 });
 
 export const RentalRowSchema = z.object({
-  id: z.string().ulid(), // Primary Key on: ["rentals", r.id], ["users", u.id, "rentals", r.id]
+  // Primary Key on:
+  // - ["rentals", r.id]
+  // - ["users", u.id, "current_rentals", r.id]
+  // - ["users", u.id, "removed_rentals", r.id]
+  id: z.string().ulid(),
   userId: z.string().ulid(),
   movieId: z.string().ulid(),
   rentalDate: z.date(),
   dueDate: z.date(),
+
+  // Extra information:
+  isReturned: z.boolean().default(false).optional(),
+  returnedDate: z.date().optional(),
 });
 ```
 
 ## Endpoints
 
-- [x] **Auth**:
-  - [x] POST `/auth/login`
+- **Auth**:
+  - POST `/auth/login`
     - Description: Authenticates a user and returns an access token and a refresh token.
     - Payload:
       - `email`: string
       - `password`: string
-  - [x] POST `/auth/refresh-tokens`
+  - POST `/auth/refresh-tokens`
     - Description: Refreshes an access token.
     - Payload:
       - `refreshToken`: string
-- [x] **Users**:
-  - [x] GET `/users`
+- **Users**:
+  - GET `/users`
     - Description: Returns a list of users.
     - Query parameters:
       - `cursor`: string
       - `limit`: number
       - `reverse`: boolean
-  - [x] POST `/users`
+  - POST `/users`
     - Description: Registers a new user.
     - Payload:
       - `email`: string
       - `name`: string
       - `password`: string
         - should be 8 to 100 characters long and must have at least one uppercase letter, one lowercase letter, one number, and one special character
-  - [x] GET `/users/:user_id`
+  - GET `/users/:user_id`
     - Description: Returns a specifc user's information.
-- [x] **Movies**:
-  - [x] GET `/movies`
+- **Movies**:
+  - GET `/movies`
     - Description: Returns a list of movies.
-  - [x] GET `/movies/:movie_id`
+  - GET `/movies/:movie_id`
     - Description: Returns a specific movie's information.
-- [ ] **Rentals**:
-  - [x] GET `/rentals`
+- **Rentals**:
+  - GET `/rentals`
     - Description: Returns a list of rental records by the user.
     - Required Headers:
       - `Authorization`: string
@@ -111,21 +119,21 @@ export const RentalRowSchema = z.object({
       - `cursor`: string
       - `limit`: number
       - `reverse`: boolean
-  - [x] POST `/rentals`
+  - POST `/rentals`
     - Description: Registers a new rental record.
     - Required Headers:
       - `Authorization`: string
     - Payload:
       - `userId`: string
       - `movieId`: string
-  - [ ] GET `/rentals/:rental_id`
-    - Required Headers:
-      - `Authorization`: string
+  - GET `/rentals/:rental_id`
     - Description: Returns a specific rental record.
-  - [ ] DELETE `/rentals/:rental_id`
     - Required Headers:
       - `Authorization`: string
+  - DELETE `/rentals/:rental_id`
     - Description: Soft deletes a specific rental record.
+    - Required Headers:
+      - `Authorization`: string
 
 ### Demo
 
@@ -142,6 +150,8 @@ Check out the [demo.http](./demo.http) file for a sample flow of the requests, n
 - Create Rental (`createRental`)
 - List Rentals (`getRentals`)
 - Get Previous Movie (`getPreviousMovie`)
+- Get Rental (`getRental`)
+- Remove Rental (`removeRental`)
 
 > **NOTE**: Please install the [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) extension for [Visual Studio Code](https://code.visualstudio.com/) to run the requests. Once installed, you will be able to see the `Send Request` button on the top-left corner of the request blocks. This should open a new tab with the response. These should be ran in order, as some requests depend on the previous ones.
 
